@@ -5,7 +5,7 @@ module SessionsHelper
 		cookies[:remember_token] = { value: remember_token,
 										expires: 7.days.from_now.utc }
 		user.update_attribute(:remember_token, User.digest(remember_token))
-		self.current_user = user
+		self.current_user = user #not really needed because of redirect after signing in but safe to have.
 	end
 
 	def current_user=(user)
@@ -24,7 +24,7 @@ module SessionsHelper
 	def sign_out
 		current_user.update_attribute(:remember_token, User.digest(User.new_remember_token))
 		cookies.delete(:remember_token)
-		self.current_user = nil
+		self.current_user = nil #not really needed because of redirect after signing out but safe to have.
 	end
 
 end
