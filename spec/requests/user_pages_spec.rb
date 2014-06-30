@@ -7,7 +7,7 @@ describe "UserPages" do
 		before { visit signup_path }
 
 		it {should have_content('Sign up') }
-		it {should have_title('Sign up') }
+		it {should have_title(full_title('Sign up')) }
 	end
 
 	describe "profile page" do
@@ -59,6 +59,7 @@ describe "UserPages" do
 				it { should have_title(user.name) }
 				it { should have_selector('div.alert.alert-success', text: 'Welcome') }
 				it { should have_selector('h1', text: user.name) }
+				it { should have_link('Sign out') }
 			end
 
 		end
