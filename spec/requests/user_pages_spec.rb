@@ -32,7 +32,7 @@ describe "UserPages" do
 				let(:page_title) { 'Sign up' }
 
 				it { should have_title(full_title(page_title)) }
-				it { should have_selector('div.alert.alert-error', text: 'error') }
+				it { should have_error_message('error') }
 				it { should have_selector('div#error_explanation li', text: 'Name') }
 				it { should have_selector('div#error_explanation li', text: 'Email') }
 				it { should have_selector('div#error_explanation li', text: 'Password') }
@@ -41,12 +41,7 @@ describe "UserPages" do
 		end
 
 		describe "with valid information" do
-			before do
-				fill_in "Name",	with: "Example User"
-				fill_in "Email",	with: "user@example.com"
-				fill_in "Password",	with: "foobar"
-				fill_in "Confirmation",	with: "foobar"
-			end
+			before { valid_user_creation }
 
 			it "should create a user" do
 				expect { click_button submit }.to change(User, :count).by(1)
