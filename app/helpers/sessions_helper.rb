@@ -27,4 +27,8 @@ module SessionsHelper
 		self.current_user = nil #not really needed because of redirect after signing out but safe to have.
 	end
 
+	def current_user?(user)
+		user == current_user
+	end
+
 end
