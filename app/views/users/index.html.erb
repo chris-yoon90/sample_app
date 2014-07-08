@@ -1,11 +1,11 @@
 <% provide(:title, 'All users') %>
 <h1>All users</h1>
 
+<%= will_paginate @users%>
+
 <ul class="users"> 
-	<% @users.each do |user| %>
-	<li> 
-		<%= gravatar_for user, size: 52 %>
-		<%= link_to user.name, user_path(user) %>
-	</li>
-	<% end %>
+	<!-- rails will automatically iterate through @users and use _user partial to render each user -->
+	<%= render @users %> 
 </ul>
+
+<%= will_paginate @users%>
