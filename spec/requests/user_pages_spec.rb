@@ -52,8 +52,13 @@ describe "UserPages" do
 				it { should have_selector('div.alert.alert-success', text: 'Welcome') }
 				it { should have_selector('h1', text: user.name) }
 				it { should have_link('Sign out') }
-			end
 
+				describe "user should not be able to visit Users#new" do
+					before { visit signup_path }
+					specify { expect(current_path).to eq root_path }
+					it { should_not have_link('Sign up now!', href: signup_path) }
+				end
+			end
 		end
 
 	end
@@ -94,6 +99,17 @@ describe "UserPages" do
 			specify { expect(user.reload.name).to eq new_name }
 			specify { expect(user.reload.email).to eq new_email }
 
+		end
+
+		describe "forbidden attributes" do
+			let(:params) do
+				{ user: { admin: true, password: user.password, password_confirmation: user.password } }
+			end
+			before do
+				sign_in user, no_capybara: true
+				patch user_path(user), params
+			end
+			specify { expect(user.reload).not_to be_admin }
 		end
 
 	end

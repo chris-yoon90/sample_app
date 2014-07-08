@@ -20,12 +20,22 @@ describe "Authentication" do
 		describe "with invalid information" do
 			before { click_button "Sign in" }
 
+			shared_examples_for "non-signed in pages" do
+				it { should_not have_link('Profile') }
+				it { should_not have_link('Sign out', href: signout_path) }
+				it { should have_link('Sign in', href: signin_path) }
+				it { should_not have_link('Settings') }
+				it { should_not have_link('Users', href: users_path) }
+			end
+
 			it_should_behave_like "all sign in pages"
 			it { should have_error_message('Invalid') }
+			it_should_behave_like "non-signed in pages"
 
 			describe "after visiting another page" do
 				before { click_link "Home" }
 				it { should_not have_error_message('Invalid') }
+				it_should_behave_like "non-signed in pages"
 			end
 
 		end
@@ -56,9 +66,7 @@ describe "Authentication" do
 			describe "when attempting to visit a protected page" do
 				before do
 					visit edit_user_path(user)
-					fill_in "Email", with: user.email
-					fill_in "Password", with: user.password
-					click_button "Sign in"
+					sign_in(user)
 				end
 
 				describe "after signing in" do

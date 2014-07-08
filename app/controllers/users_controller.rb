@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :signed_in_user, only: [:index, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: [:destroy]
+  before_action :redirect_to_root, only: [:new]
 
   def new
   	@user = User.new
@@ -68,6 +69,10 @@ class UsersController < ApplicationController
       unless current_user.admin?
         redirect_to(root_url)
       end
+    end
+
+    def redirect_to_root
+      redirect_to(root_url) if signed_in?
     end
 
 end

@@ -3,7 +3,9 @@
 	<h2>
 		This a simple micro-blogging application made by following <%= link_to "Ruby on Rails tutorial", 'http://railstutorial.org/', target: "_blank"%> by Michael Hartl. 
 	</h2>
-	<%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary", target: "_blank" %>
+	<% unless signed_in? %>
+		<%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>
+	<% end %>
 </div>
 
 <%= link_to image_tag("logo_clipped_rev_4.png", alt: "Chris Yoon"), 'http://www.chrisjyyoon.com', target: "_blank" %>
