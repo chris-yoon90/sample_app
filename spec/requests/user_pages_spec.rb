@@ -53,11 +53,6 @@ describe "UserPages" do
 				it { should have_selector('h1', text: user.name) }
 				it { should have_link('Sign out') }
 
-				describe "user should not be able to visit Users#new" do
-					before { visit signup_path }
-					specify { expect(current_path).to eq root_path }
-					it { should_not have_link('Sign up now!', href: signup_path) }
-				end
 			end
 		end
 
@@ -149,13 +144,41 @@ describe "UserPages" do
 				end
 
 				it { should have_link('delete', href: user_path(User.first)) }
-				it "shoould be able to delete another user" do
+				it "should be able to delete another user" do
 					expect {
 						click_link('delete', match: :first)
 					}.to change(User, :count).by(-1)
 				end
 
 				it { should_not have_link('delete', href: user_path(admin)) }
+			end
+
+		end
+
+	end
+
+	describe "signed in user" do
+		let(:user) { FactoryGirl.create(:user) }
+		describe "user should not be able to visit Users#new" do
+			before do 
+				sign_in user
+				visit signup_path
+			end
+			specify { expect(current_path).to eq root_path }
+			it { should_not have_link('Sign up now!', href: signup_path) }
+		end
+
+		describe "submitting requests to User#new and User#create actions" do
+			before { sign_in user, no_capybara: true }
+
+			describe "submitting GET request to User#new action" do
+				before { get new_user_path }
+				specify{ expect(response).to redirect_to root_url }
+			end
+
+			describe "submitting POST request to User#create action" do
+				before { post users_path }
+				specify{ expect(response).to redirect_to root_url }
 			end
 
 		end

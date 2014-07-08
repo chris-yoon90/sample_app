@@ -71,6 +71,17 @@ describe "Authentication" do
 
 				describe "after signing in" do
 					it { should have_title(full_title("Edit #{user.name}")) }
+
+					describe "after signing off and siginging back in" do
+						before do
+							click_link "Sign out"
+							sign_in user
+						end
+
+						it { should have_title(full_title(user.name)) }
+
+					end
+
 				end
 			end
 
@@ -121,6 +132,20 @@ describe "Authentication" do
 				specify { expect(response).to redirect_to(root_url) }
 			end
 
+		end
+
+		describe "as admin user" do
+			let(:admin) { FactoryGirl.create(:admin) }
+			before { sign_in admin, no_capybara: true }
+
+			describe "submitting a DELETE request to the Users#destroy action" do
+				before { delete user_path(admin) }
+
+				it "should not be able to delete itself" do
+					expect(response).to redirect_to root_url
+				end
+
+			end
 		end
 
 	end
