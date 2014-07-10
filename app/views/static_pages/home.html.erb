@@ -1,13 +1,32 @@
+<% if signed_in? %>
+<div class="row">
+	<aside class="span4">
+		<section> 
+			<%= render 'shared/user_info' %>
+		</section>
+		<section>
+			<%= render 'shared/micropost_form' %>
+		</section>
+	</aside>
+	<div class="span8">
+		<h3>Micropost Feed</h3>
+		<%= render 'shared/feed' %>
+	</div>
+</div>
+<% else %>
+
+
 <div class="center hero-unit">
 	<h1>Sample Application by Chris Yoon</h1>
 	<h2>
 		This a simple micro-blogging application made by following <%= link_to "Ruby on Rails tutorial", 'http://railstutorial.org/', target: "_blank"%> by Michael Hartl. 
 	</h2>
 	<% unless signed_in? %>
-		<%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>
+	<%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>
 	<% end %>
 </div>
 
 <%= link_to image_tag("logo_clipped_rev_4.png", alt: "Chris Yoon"), 'http://www.chrisjyyoon.com', target: "_blank" %>
 <%= link_to image_tag("rails.png", alt: "Rails"), 'http://railstutorial.org/', target: "_blank" %>
 
+<% end %>
