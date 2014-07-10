@@ -132,6 +132,14 @@ describe "Authentication" do
 				before { patch user_path(wrong_user) }
 				specify { expect(response).to redirect_to(root_url) }
 			end
+
+			describe "submitting a DELETE request to the Micropost#destroy action" do
+				let!(:m1) { FactoryGirl.create(:micropost, user: wrong_user) }
+				before { delete micropost_path(m1) }
+				# Is there a better way to test this? Succesfully deleting also redirects to root_url so this is not really a valid test
+				specify { expect(response).to redirect_to(root_url) }
+			end
+
 		end
 
 		describe "as non-admin user" do
