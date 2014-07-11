@@ -30,7 +30,7 @@ describe "UserPages" do
 					visit user_path(user)
 				end
 				it "should list 10 microposts on each page" do
-					user.feed.paginate(page: 1, per_page: 10).each do |item|
+					user.microposts.paginate(page: 1, per_page: 10).each do |item|
 						expect(page).to have_selector("li", text: item.content)
 					end
 				end
