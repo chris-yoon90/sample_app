@@ -26,10 +26,18 @@ describe "Static pages" do
 				visit root_path
 			end
 
+			it { should have_link('view my profile', href: user_path(user)) }
+			it { should have_selector("#micropost_content") }
+			it { should have_selector("input.btn.btn-large.btn-primary")}
+
 			it "should render the user's feed" do
 				user.feed.each do |item|
 					expect(page).to have_selector("li##{item.id}", text: item.content)
 				end
+			end
+
+			it "should have correct number of feeds" do
+				expect(page).to have_content("#{user.feed.count} #{'micropost'.pluralize(user.feed.count)}")
 			end
 
 		end

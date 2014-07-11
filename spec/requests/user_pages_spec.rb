@@ -23,6 +23,19 @@ describe "UserPages" do
 			it { should have_content(m1.content) }
 			it { should have_content(m2.content) }
 			it { should have_content(user.microposts.count) }
+
+			describe "pagination" do
+				before do 
+					8.times { FactoryGirl.create(:micropost, user: user) } 
+					visit user_path(user)
+				end
+				it "should list 10 microposts on each page" do
+					user.feed.paginate(page: 1, per_page: 10).each do |item|
+						expect(page).to have_selector("li", text: item.content)
+					end
+				end
+			end
+
 		end
 
 	end
@@ -135,7 +148,7 @@ describe "UserPages" do
 
 			it { should have_selector('div.pagination') }
 
-			it "should list each user" do
+			it "should list 15 users on each page" do
 				User.paginate(page: 1, per_page: 15).each do |user|
 					expect(page).to have_selector('li', text: user.name)
 				end
