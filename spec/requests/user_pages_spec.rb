@@ -205,6 +205,16 @@ describe "UserPages" do
 
 		end
 
+		describe "delete links for microposts not created by the current user are not visible" do
+			let(:wrong_user) { FactoryGirl.create(:user, email: "wrong@wrong.com") }
+			let!(:m2) { FactoryGirl.create(:micropost, user: wrong_user) } 
+			before do 
+				sign_in user
+				visit user_path(wrong_user)
+			end
+			it { should_not have_link('delete', href: micropost_path(m2)) }
+		end
+
 	end
 
 end
