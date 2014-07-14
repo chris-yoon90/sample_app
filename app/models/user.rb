@@ -1,5 +1,10 @@
 class User < ActiveRecord::Base
-	has_many :microposts, dependent: :destroy
+	has_many :microposts, class_name: "Micropost", foreign_key: "user_id", dependent: :destroy
+	has_many :relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+	has_many :followed_users, through: :relationships, source: :followed
+	has_many :reverse_relationships, foreign_key: "followed_id", class_name: "Relationship", dependent: :destroy
+	has_many :followers, through: :reverse_relationships, source: :follower
+
 	before_save { email.downcase! }
 	before_create :create_remember_token
 	validates :name, presence: true, length: { maximum: 50 }
@@ -21,8 +26,22 @@ class User < ActiveRecord::Base
 	end
 
 	def feed
-		Micropost.where("user_id = ?", self.id)
+		#Micropost.where("user_id = ?", self.id)
+		Micropost.from_users_followed_by(self)
 	end
+
+	def following?(other_user)
+		self.relationships.find_by(followed_id: other_user.id)
+	end
+
+	def follow!(other_user)
+		self.relationships.create!(followed_id: other_user.id)
+	end
+
+	def unfollow!(other_user)
+		self.relationships.find_by(followed_id: other_user.id).destroy
+	end
+
 
 	private
 
