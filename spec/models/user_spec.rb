@@ -197,6 +197,26 @@ describe User do
 			its(:followers) { should include(@user) }
 		end
 
+		describe "relationship association" do
+			let(:yet_another_user) { FactoryGirl.create(:user) }
+			before { @user.follow!(yet_another_user) }
+
+			it "should destroy associated relationships" do
+				relationships = @user.relationships.to_a
+				@user.destroy
+				expect(relationships).not_to be_empty
+				relationships.each do |relationship|
+					expect(Relationship.where(follower_id: relationship.follower_id, followed_id: relationship.followed_id)).to be_empty
+				end
+			end
+
+			describe "should not be included as a follower" do
+				before { @user.destroy }
+				specify { expect(other_user.followers).not_to include(@user) }
+				specify { expect(yet_another_user.followers).not_to include(@user) }
+			end
+		end
+
 	end
 
 end
