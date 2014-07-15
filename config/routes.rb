@@ -15,4 +15,12 @@ SampleApp::Application.routes.draw do
 
 	match '/signin', to: 'sessions#new', via: 'get'
 	match '/signout', to: 'sessions#destroy', via: 'delete'
+
+	#subdomain doesn't work. WHY?
+	namespace :api, path: "", defaults: { format: :json } do
+		namespace :v1 do
+			resources :users, except: [:new, :edit]
+		end
+	end
+
 end
