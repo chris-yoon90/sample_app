@@ -42,6 +42,10 @@ class User < ActiveRecord::Base
 		self.relationships.find_by(followed_id: other_user.id).destroy
 	end
 
+	def as_json(options = {})
+		super(only: [:id, :name, :email])
+	end
+
 
 	private
 

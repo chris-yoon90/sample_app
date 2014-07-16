@@ -10,4 +10,8 @@ class Micropost < ActiveRecord::Base
 		# why doesn't the above work??
 		where("user_id IN (#{followed_user_ids}) OR user_id = :user_id", user_id: user.id)
 	end
+
+	def as_json(options = {})
+		super(only: [:id, :content, :user_id, :created_at])
+	end
 end
