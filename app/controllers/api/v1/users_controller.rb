@@ -12,7 +12,8 @@ module Api
 
 			def show
 				@user = User.find(params[:id])
-				@microposts = @user.microposts.all(limit: 5) #supposed to use paginate
+				#@microposts = @user.microposts.all(limit: 5) #supposed to use paginate
+				@microposts = Micropost.where("user_id = ?", @user.id).limit(5)
 				respond_with user: @user, microposts: @microposts
 			end
 
