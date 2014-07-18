@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Api::V1::UsersController, type: :api do
+describe "Users Api V1", type: :api do
 
 	let(:user) { User.new(name: "Example User", email: "user@example.com",
 		password: "foobar", password_confirmation: "foobar") }
@@ -18,6 +18,7 @@ describe Api::V1::UsersController, type: :api do
 				end
 				specify{ expect(User.count).to eq original_count }
 				specify { expect(response.status).to eq(422)  }
+				specify { expect(response.header["X-CSRF-Token"]).not_to be_empty }
 			end
 
 			describe "with valid information" do
@@ -26,6 +27,7 @@ describe Api::V1::UsersController, type: :api do
 				end
 				specify { expect(response.status).to eq(201)  }
 				specify{ expect(User.count).to eq original_count+1 }
+				specify { expect(response.header["X-CSRF-Token"]).not_to be_empty }
 			end
 
 		end
