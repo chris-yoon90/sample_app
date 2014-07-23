@@ -1,4 +1,5 @@
 SampleApp::Application.routes.draw do
+  use_doorkeeper
  	resources :users do
  		member do
  			get :following, :followers
@@ -16,9 +17,10 @@ SampleApp::Application.routes.draw do
 	match '/signin', to: 'sessions#new', via: 'get'
 	match '/signout', to: 'sessions#destroy', via: 'delete'
 
-	namespace :api, defaults: { format: :json } do
+	namespace :api do
 		namespace :v1 do
-			resources :users, except: [:new, :edit]
+			resources :users, except: [:edit, :new], defaults: { format: :json }
+			resources :sessions, only: [ :new, :create ]
 		end
 	end
 
