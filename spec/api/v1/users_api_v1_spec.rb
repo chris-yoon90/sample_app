@@ -18,7 +18,6 @@ describe "Users Api V1", type: :api do
 				end
 				specify{ expect(User.count).to eq original_count }
 				specify { expect(response.status).to eq(422)  }
-				specify { expect(response.header["X-CSRF-Token"]).not_to be_empty }
 			end
 
 			describe "with valid information" do
@@ -27,7 +26,6 @@ describe "Users Api V1", type: :api do
 				end
 				specify { expect(response.status).to eq(201)  }
 				specify{ expect(User.count).to eq original_count+1 }
-				specify { expect(response.header["X-CSRF-Token"]).not_to be_empty }
 			end
 
 		end

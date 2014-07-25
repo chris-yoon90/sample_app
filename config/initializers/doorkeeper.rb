@@ -5,7 +5,6 @@ Doorkeeper.configure do
 
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
-    #fail "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
     remember_token = User.digest(session[:remember_token])
     User.find_by(remember_token: remember_token) || redirect_to(new_api_v1_session_path(
                               client_id: params[:client_id], 
