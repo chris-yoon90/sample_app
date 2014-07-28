@@ -8,14 +8,14 @@ module Api
 
 
 			def index
-				@users = User.all(limit: 2) #supposed to use paginate
+				@users = User.paginate(page: params[:page], per_page: 15)
 				respond_with @users
 			end
 
 			def show
 				@user = User.find(params[:id])
-				#@microposts = @user.microposts.all(limit: 5) #supposed to use paginate
-				@microposts = Micropost.where("user_id = ?", @user.id).limit(5)
+				@microposts = @user.microposts.paginate(page: params[:page], per_page: 15)
+				#@microposts = Micropost.where("user_id = ?", @user.id).limit(5)
 				respond_with user: @user, microposts: @microposts
 			end
 
@@ -28,7 +28,12 @@ module Api
 			end
 
 			def update
-				respond_with User.update_attribute(user_params)
+				@user = User.find(params[:id])
+				if @user.update_attributes(user_params)
+					respond_with user: @user.as_json
+				else
+					respond_with error: "Error"
+				end
 			end
 
 			private
