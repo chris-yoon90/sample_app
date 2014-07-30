@@ -30,4 +30,13 @@ describe Micropost do
 		it { should_not be_valid }
 	end
 
+	describe "as JSON" do
+		let(:micropost_as_json) { @micropost.as_json }
+		specify { micropost_as_json.key?('id').should be_true }
+		specify { micropost_as_json.key?('content').should be_true }
+		specify { micropost_as_json.key?('user_id').should be_true }
+		specify { micropost_as_json.key?('created_at').should be_true }
+		specify { micropost_as_json.key?('updated_at').should be_false }
+	end
+
 end

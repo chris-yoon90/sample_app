@@ -4,6 +4,7 @@ module Api
 
 			doorkeeper_for :all, except: [:show, :create]
 			before_action :correct_resource_owner, only: [:update]
+			before_action :admin_user, only: [:destroy]
 			skip_before_filter :verify_authenticity_token
 			respond_to :json
 
@@ -31,7 +32,23 @@ module Api
 			end
 
 			def destroy
-				respond_with User.destroy(params[:id])
+				user = User.find_by(id: params[:id])
+				unless current_resource_owner?(user)
+					if user
+						user.destroy
+						respond_to do |format|
+							format.json { render json: { message: "User: #{user.name} successfully deleted." }, status: :ok }
+						end
+					else
+						respond_to do |format|
+							format.json { render json: { error: "User was not found." }, status: :not_found }
+						end
+					end
+				else
+					respond_to do |format|
+						format.json { render json: { error: "Forbidden request." }, status: :forbidden }
+					end
+				end
 			end
 
 			def update
@@ -54,6 +71,14 @@ module Api
   				def correct_resource_owner
   					@user = User.find_by(id: params[:id])
   					unless current_resource_owner?(@user)
+  						respond_to do |format|
+  							format.json { render json: { error: "Unauthorized access." }, status: :unauthorized }
+  						end
+  					end
+  				end
+
+  				def admin_user
+  					unless current_resource_owner && current_resource_owner.admin?
   						respond_to do |format|
   							format.json { render json: { error: "Unauthorized access." }, status: :unauthorized }
   						end

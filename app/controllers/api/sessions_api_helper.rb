@@ -3,9 +3,15 @@ module Api
 		
 		def current_resource_owner?(user)
 			if doorkeeper_token
-				user == User.find(doorkeeper_token.resource_owner_id)
+				user == current_resource_owner
 			else
 				false
+			end
+		end
+
+		def current_resource_owner
+			if doorkeeper_token
+				User.find_by(id: doorkeeper_token.resource_owner_id)
 			end
 		end
 	

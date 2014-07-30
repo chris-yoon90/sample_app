@@ -219,4 +219,16 @@ describe User do
 
 	end
 
+	describe "as JSON" do
+		let(:user_as_json) { @user.as_json }
+		specify { user_as_json.key?('id').should be_true }
+		specify { user_as_json.key?('email').should be_true }
+		specify { user_as_json.key?('name').should be_true }
+		specify { user_as_json.key?('created_at').should be_true }
+		specify { user_as_json.key?('password_digest').should be_false }
+		specify { user_as_json.key?('remember_token').should be_false }
+		specify { user_as_json.key?('admin').should be_false }
+		specify { user_as_json.key?('updated_at').should be_false }
+	end
+
 end
